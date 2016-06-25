@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+    </style>
+</head>
+<body>
+<canvas id="myCanvas" width="600" height="600"></canvas>
+<script>
+    window.onload = function () {
+        clock();
+        setInterval(clock, 1000);///每一秒钟重新绘制一次
+    };
+    function clock() {
+        ///得到时分秒
+        var now = new Date();
+        var sec = now.getSeconds(), min = now.getMinutes(), hour = now.getHours();
+        hour = hour >= 12 ? hour - 12 : hour;
+        var myCanvas = document.getElementById("myCanvas");
+        var c = myCanvas.getContext("2d");
+        var X = 300;
+        var Y = 300;
+        var R = 200;
+        var PI = Math.PI;
+        c.clearRect(0, 0, 600, 600);    ///初始化画布
+        c.save();
+        //定位原点
+        c.translate(X, Y);//即原来的[300,300]映射为[0,0]
+        c.rotate(-Math.PI / 2);//rotate起始位置由水平顺时针旋转，一般时钟都是从12点开始转，所以初始化的时候回拨90度。
+        c.save();//保存当前旋转角度。（-90）
+
+        //画圆盘
+        c.beginPath();
+        c.arc(0, 0, R, 0, PI * 2);//定好圆轨迹
+        c.stroke();//根据定好的圆轨迹画圆
+        c.restore();//返回初始状态
+        c.save();//返回初始状态会保存初始状态
+        //画时刻
+        c.beginPath();
+        c.lineWidth = 8;
+        for (var i = 0; i != 12; i++) {
+            c.rotate(PI / 6);//一次转PI/6
+            c.moveTo(190, 0);
+            c.lineTo(180, 0);
+        }
+        c.stroke();
+        c.restore();
+        c.save();
+        //画分刻
+        c.beginPath();
+        c.lineWidth = 2;
+        for (var i = 0; i != 60; i++) {
+            c.rotate(PI / 30);//一次转PI/30
+            c.moveTo(188, 0);
+            c.lineTo(190, 0);
+        }
+        c.stroke();
+        c.restore();
+        c.save();
+        //画时针
+        c.beginPath();
+        c.rotate((PI / 6) * hour + (PI / 360) * min + (PI / 21600) * sec);//时针的旋转角度
+        c.lineWidth = 5;
+        c.moveTo(80, 0);
+        c.lineTo(-20, 0);
+        c.stroke();
+        c.restore();
+        c.save();
+        //画分针
+        c.beginPath();
+        c.rotate((PI / 30) * min + (PI / 1800) * sec);//时针的旋转角度
+        c.lineWidth = 3;
+        c.moveTo(120, 0);
+        c.lineTo(-30, 0);
+        c.stroke();
+        c.restore();
+        c.save();
+        //画上秒针
+        c.beginPath();
+        c.rotate((PI / 30) * sec);//时针的旋转角度
+        c.moveTo(160, 0);
+        c.lineTo(-40, 0);
+        c.stroke();
+        c.restore();
+        c.restore();
+    }
+</script>
+</body>
+</html>
